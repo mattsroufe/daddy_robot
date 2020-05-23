@@ -50,3 +50,4 @@ sudo apt install libqt4-test
 pip3 uninstall opencv-python
 pip3 install opencv-python==3.4.6.27
 ```
+

@@ -3,6 +3,23 @@ import RPi.GPIO as GPIO
 import time
 import curses
 
+# beginning of elsies code
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+
+# leds
+GPIO.setup(22,GPIO.OUT) # red
+GPIO.setup(27,GPIO.OUT) # green
+GPIO.setup(24,GPIO.OUT) # blue
+
+# print("LED on")
+# GPIO.output(22,GPIO.HIGH)
+# time.sleep(1)
+# print("LED off")
+# GPIO.output(22,GPIO.LOW)
+# end of elsies code
+
 #Definition of  motor pin 
 IN1 = 20
 IN2 = 21
@@ -51,10 +68,14 @@ def motor_init():
     pwm_ENA.start(0)
     pwm_ENB.start(0)
 
+    GPIO.setup(ServoPinJ1, GPIO.OUT)
     GPIO.setup(ServoPinJ2, GPIO.OUT)
     GPIO.setup(ServoPinJ3, GPIO.OUT)
 
-	
+    setServoAngle(ServoPinJ1, 50)
+    setServoAngle(ServoPinJ2, 50)
+    setServoAngle(ServoPinJ3, 50)
+
 #advance
 def run(delaytime):
     GPIO.output(IN1, GPIO.HIGH)
@@ -159,6 +180,18 @@ def main(window):
                 setServoAngle(ServoPinJ2, 10) # right
             elif key == 97: # left
                 setServoAngle(ServoPinJ2, 90) # right
+            elif key == 103: # green
+                GPIO.output(24,GPIO.LOW)
+                GPIO.output(22,GPIO.LOW)
+                GPIO.output(27,GPIO.HIGH)
+            elif key == 98: # blue
+                GPIO.output(27,GPIO.LOW)
+                GPIO.output(22,GPIO.LOW)
+                GPIO.output(24,GPIO.HIGH)
+            elif key == 114: # red
+                GPIO.output(27,GPIO.LOW)
+                GPIO.output(24,GPIO.LOW)
+                GPIO.output(22,GPIO.HIGH)
             else:
                 curses.halfdelay(3)
                 action = actions.get(key)
@@ -170,13 +203,14 @@ def main(window):
                 # KEY UP
                 brake(0)
 
-curses.wrapper(main)
+# curses.wrapper(main)
 
 #The try/except statement is used to detect errors in the try block.
 #the except statement catches the exception information and processes it.
 #The robot car advance 1s，back 1s，turn left 2s，turn right 2s，turn left  in place 3s
 #turn right  in place 3s，stop 1s。
-#try:
+try:
+    curses.wrapper(main)
 #    motor_init()
 #    while True:
 #        run(1)
@@ -186,9 +220,11 @@ curses.wrapper(main)
 #	spin_left(3)
 #	spin_right(3)
 #	brake(1)
-#except KeyboardInterrupt:
+except KeyboardInterrupt:
 #    pass
-#pwm_ENA.stop()
-#pwm_ENB.stop()
-#GPIO.cleanup() 
-
+    pwm_ENA.stop()
+    pwm_ENB.stop()
+    GPIO.output(27,GPIO.LOW)
+    GPIO.output(24,GPIO.LOW)
+    GPIO.output(22,GPIO.LOW)
+    GPIO.cleanup()

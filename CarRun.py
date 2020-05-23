@@ -227,4 +227,5 @@ except KeyboardInterrupt:
     GPIO.output(27,GPIO.LOW)
     GPIO.output(24,GPIO.LOW)
     GPIO.output(22,GPIO.LOW)
-    GPIO.cleanup()
+    GPIO.cleanup() 
+

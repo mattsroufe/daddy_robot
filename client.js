@@ -85,11 +85,24 @@ function start() {
       console.log('data close');
     };
     dc.onopen = function() {
+      document.body.addEventListener('keypress', function(e) {
+	      console.log(e)
+      })
       console.log('data open');
+      redButton = document.getElementById("red-button");
+      redButton.addEventListener('click', function(event) {
+          dc.send("toggle-red")
+          event.preventDefault();
+      })
+      servoOneUpButton = document.getElementById("servo-1-up-button");
+      servoOneUpButton.addEventListener('click', function(event) {
+          dc.send("servo-1-up")
+          event.preventDefault();
+      })
       dcInterval = setInterval(function() {
-	var message = 'ping ' + current_stamp();
-	console.log(message);
-	dc.send(message);
+    var message = 'ping ' + current_stamp();
+    console.log(message);
+    dc.send(message);
       }, 1000);
     };
     dc.onmessage = function(evt) {

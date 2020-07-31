@@ -1,0 +1,298 @@
+<html>
+  <head>
+    <title>DaddyRobot</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Free Web tutorials">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="author" content="John Doe">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+	img {
+  	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+	}
+	html,body {
+		  background: #eee;
+		    color: #333;
+		      font: 1em/1.35 Arial, Helvetica, sans;
+	}
+	  h1 { font-size: 1.2em; font-weight: bold; }
+	    .status { max-width: 500px; font-size: 1em; font-weight: bold; }
+	      #unlimited { color: #070; border-right: 1px #ccc solid; }
+	        #debounced { color: #900; border-right: 1px #ccc solid; }
+		  #throttled { color: #009; }
+		    .status > div { width: 32%; height: 5em; float: left; }
+		      .status span { display: block; text-align: center; }
+		        .status .counter { font-size: 2.5em; }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+	    /**
+	     * debounce
+ * @param {integer} milliseconds This param indicates the number of milliseconds
+ *     to wait after the last call before calling the original function.
+	 * @param {object} What "this" refers to in the returned function.
+	 * @return {function} This returns a function that when called will wait the
+ *     indicated number of milliseconds after the last call before
+ *     calling the original function.
+	 */
+	Function.prototype.debounce = function (milliseconds, context) {
+		    var baseFunction = this,
+			        timer = null,
+			        wait = milliseconds;
+
+		    return function () {
+			            var self = context || this,
+				                args = arguments;
+
+			            function complete() {
+					                baseFunction.apply(self, args);
+					                timer = null;
+					            }
+
+			            if (timer) {
+					                clearTimeout(timer);
+					            }
+
+			            timer = setTimeout(complete, wait);
+			        };
+	};
+
+/**
+* throttle
+ * @param {integer} milliseconds This param indicates the number of milliseconds
+ *     to wait between calls before calling the original function.
+ * @param {object} What "this" refers to in the returned function.
+ * @return {function} This returns a function that when called will wait the
+ *     indicated number of milliseconds between calls before
+ *     calling the original function.
+ */
+Function.prototype.throttle = function (milliseconds, context) {
+	    var baseFunction = this,
+		        lastEventTimestamp = null,
+		        limit = milliseconds;
+
+	    return function () {
+		            var self = context || this,
+			                args = arguments,
+			                now = Date.now();
+
+		            if (!lastEventTimestamp || now - lastEventTimestamp >= limit) {
+				                lastEventTimestamp = now;
+				                baseFunction.apply(self, args);
+				            }
+		        };
+};
+
+function handleStart(e) {
+	console.log(e)
+}
+
+    </script>
+  </head>
+  <body>
+    <h1 align="center">Daddy robot</h1>
+
+    <img id="bg" class="center" src="{{ url_for('video_feed') }}">
+
+    <button type="button" id="start-button">Start</button>
+  <canvas width="640" height="360">
+	      Your browser does not support HTML5 canvas
+	        </canvas>
+    <h1>Move your mouse around (and stop for a bit too to let debounce do it's thing).</h1>
+        <br>  
+	    <div class="status">
+		            <div id="unlimited">
+				                <div>Unlimited calls:</div>
+						            <div>0</div>
+							            </div>
+								            <div id="debounce">
+										                <div>Debounced calls:</div>
+												            <div>0</div>
+													            </div>
+														            <div id="throttle">
+																                <div>Throttled calls:</div>
+																		            <div>0</div>
+																			            </div>
+																				        </div>
+    <h3 style='color: #ccc;font-size: 30px;'>No message yet..</h3>
+    <div class="message_holder"></div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    <script type="text/javascript">
+
+	    Function.prototype.debounce = function (milliseconds) {
+		        var baseFunction = this,
+			            timer = null,
+			            wait = milliseconds;
+
+		        return function () {
+				        var self = this,
+					            args = arguments;
+
+				        function complete() {
+						            baseFunction.apply(self, args);
+						            timer = null;
+						        }
+
+				        if (timer) {
+						            clearTimeout(timer);
+						        }
+
+				        timer = setTimeout(complete, wait);
+				    };
+	    };
+
+/**
+	* throttle
+ * @param {integer} milliseconds This param indicates the number of milliseconds
+*     to wait between calls before calling the original function.
+ * @return {function} This returns a function that when called will wait the
+*     indicated number of milliseconds between calls before
+*     calling the original function.
+	*/
+	Function.prototype.throttle = function (milliseconds) {
+		    var baseFunction = this,
+			        lastEventTimestamp = null,
+			        limit = milliseconds;
+
+		    return function () {
+			            var self = this,
+				                args = arguments,
+				                now = Date.now();
+
+			            if (!lastEventTimestamp || now - lastEventTimestamp >= limit) {
+					                lastEventTimestamp = now;
+					                baseFunction.apply(self, args);
+					            }
+			        };
+	};
+
+
+/* Test code */
+
+var canvas = document.querySelector('canvas');
+$('#start-button').click(function(e) {
+	
+console.log(e)
+
+canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock;
+canvas.requestPointerLock();
+
+})
+
+// Hook pointer lock state change events for different browsers
+document.addEventListener('pointerlockchange', lockChangeAlert, false);
+document.addEventListener('mozpointerlockchange', lockChangeAlert, false);
+
+function updatePosition(e) {
+          socket.emit('move-servo', {x: e.movementX, y: e.movementY});
+}
+
+function lockChangeAlert() {
+	  if (document.pointerLockElement === canvas ||
+		        document.mozPointerLockElement === canvas) {
+		      console.log('The pointer lock status is now locked');
+		      document.addEventListener("mousemove", updatePosition.throttle(150), false);
+		    } else {
+			        console.log('The pointer lock status is now unlocked');  
+			        document.removeEventListener("mousemove", updatePosition, false);
+			      }
+}
+
+	var unlimitedCalls = 0,
+	    debounceCalls = 0,
+	    throttleCalls = 0,
+	    latestPosition;
+
+$(document).bind('mousemove', function(e) {
+	    $("#unlimited").children().last().text(unlimitedCalls++);
+}); // no limit applied
+
+$(document).bind('mousemove', function(e) {
+	    $("#debounce").children().last().text(debounceCalls++);
+	window.latestPosition = [e.clientX, e.clientY]
+}.debounce(150)); // debounce with a 150 millisecond limit
+
+$(document).bind('keypress', function(e) {
+	console.log(e)
+	const currentPosition = [e.clientX, e.clientY]
+	const lastPosition = window.latestPosition || currentPosition
+
+	if (currentPosition === lastPosition) return
+
+	data = currentPosition.map((x,i) => { return (lastPosition[i] - x) / 2 })
+	console.log(data)
+	
+	    $("#throttle").children().last().text(throttleCalls++);
+}.throttle(150)); // throttle with a 150 millisecond limit    
+
+
+      var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+      const SERVO_UP_KEY = 87;
+      const SERVO_DOWN_KEY = 83;
+
+      function startServoUp(e) {
+        if (e.keyCode === SERVO_UP_KEY) {
+          document.removeEventListener('keydown', startServoUp);
+          socket.emit('my event', {action: 'minus'});
+          console.log('start servo up');
+        }
+      }
+
+      function stopServoUp(e) {
+        if (e.keyCode === SERVO_UP_KEY) {
+          document.addEventListener('keydown', startServoUp);
+          console.log('stop servo up')
+        }
+      }
+
+      function startServoDown(e) {
+        if (e.keyCode === SERVO_DOWN_KEY) {
+          document.removeEventListener('keydown', startServoDown);
+          console.log('start servo down');
+        }
+      }
+
+      function stopServoDown(e) {
+        if (e.keyCode === SERVO_DOWN_KEY) {
+          document.addEventListener('keydown', startServoDown);
+          console.log('stop servo down');
+        }
+      }
+
+      document.addEventListener('keyup', stopServoUp)
+      document.addEventListener('keyup', stopServoDown)
+      document.addEventListener('keydown', startServoUp)
+      document.addEventListener('keydown', startServoDown)
+
+
+      socket.on( 'connect', function() {
+        socket.emit( 'my event', {
+          data: 'User Connected'
+        } )
+
+        var form = $( 'form' ).on( 'submit', function( e ) {
+          e.preventDefault()
+          let user_name = $( 'input.username' ).val()
+          let user_input = $( 'input.message' ).val()
+          socket.emit( 'my event', {
+            user_name : user_name,
+            message : user_input
+          } )
+          $( 'input.message' ).val( '' ).focus()
+        } )
+      } )
+      socket.on( 'my response', function( msg ) {
+        console.log( msg )
+        if( typeof msg.user_name !== 'undefined' ) {
+          $( 'h3' ).remove()
+          $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+        }
+      })
+    </script>
+  </body>
+</html>

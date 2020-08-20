@@ -51,3 +51,7 @@ pip3 uninstall opencv-python
 pip3 install opencv-python==3.4.6.27
 ```
 
+## ROS Resources
+
+http://docs.donkeycar.com
+https://www.youtube.com/playlist?list=PLjDc7gDlIASSp38zxcD_KMhogQBt7Dz_r linuxconf ros talks

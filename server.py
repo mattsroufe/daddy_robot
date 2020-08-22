@@ -51,38 +51,14 @@ async def offer(request):
             left = robot.get("axes")[1]
             right = robot.get("axes")[3]
 
-            if left < -0.5:
-                print('left forward')
-                GPIO.output(IN1, GPIO.HIGH)
-                GPIO.output(IN2, GPIO.LOW)
-                pwm_ENA.ChangeDutyCycle(50)
-                time.sleep(0.1)
-            if left > 0.5:
-                print('left back')
-                GPIO.output(IN1, GPIO.LOW)
-                GPIO.output(IN2, GPIO.HIGH)
-                pwm_ENA.ChangeDutyCycle(50)
-                time.sleep(0.1)
+            GPIO.output(IN1, GPIO.HIGH if left < -0.5 else GPIO.LOW)
+            GPIO.output(IN2, GPIO.HIGH if left > 0.5 else GPIO.LOW)
+            pwm_ENA.ChangeDutyCycle(50 if abs(left) > 0.5 else 0)
 
-            if right < -0.5:
-                print('right forward')
-                GPIO.output(IN3, GPIO.HIGH)
-                GPIO.output(IN4, GPIO.LOW)
-                pwm_ENB.ChangeDutyCycle(50)
-                time.sleep(0.1)
-            if right > 0.5:
-                print('right back')
-                GPIO.output(IN3, GPIO.LOW)
-                GPIO.output(IN4, GPIO.HIGH)
-                pwm_ENB.ChangeDutyCycle(50)
-                time.sleep(0.1)
-            else:
-                GPIO.output(IN1, GPIO.LOW)
-                GPIO.output(IN2, GPIO.LOW)
-                GPIO.output(IN3, GPIO.LOW)
-                GPIO.output(IN4, GPIO.LOW)
-                pwm_ENA.ChangeDutyCycle(0)
-                pwm_ENB.ChangeDutyCycle(0)
+            GPIO.output(IN3, GPIO.HIGH if right < -0.5 else GPIO.LOW)
+            GPIO.output(IN4, GPIO.HIGH if right > 0.5 else GPIO.LOW)
+            pwm_ENB.ChangeDutyCycle(50 if abs(right) > 0.5 else 0)
+            time.sleep(0.1)
 
             if isinstance(message, str) and message.startswith("ping"):
                 channel.send("pong" + message[4:])

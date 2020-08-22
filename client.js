@@ -95,7 +95,7 @@ function start() {
             })
           }));
         }
-      }, 100);
+      }, 200);
     };
     dc.onmessage = function(evt) {
       console.log(evt.data);

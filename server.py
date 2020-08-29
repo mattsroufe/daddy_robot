@@ -53,12 +53,12 @@ async def offer(request):
             left = robot.get("axes")[1]
             right = robot.get("axes")[3]
 
-            GPIO.output(IN1, GPIO.HIGH if left < -0.5 else GPIO.LOW)
-            GPIO.output(IN2, GPIO.HIGH if left > 0.5 else GPIO.LOW)
+            GPIO.output(IN1, GPIO.HIGH if left > 0.5 else GPIO.LOW)
+            GPIO.output(IN2, GPIO.HIGH if left < -0.5 else GPIO.LOW)
             pwm_ENA.ChangeDutyCycle(50 if abs(left) > 0.5 else 0)
 
-            GPIO.output(IN3, GPIO.HIGH if right < -0.5 else GPIO.LOW)
-            GPIO.output(IN4, GPIO.HIGH if right > 0.5 else GPIO.LOW)
+            GPIO.output(IN3, GPIO.HIGH if right > 0.5 else GPIO.LOW)
+            GPIO.output(IN4, GPIO.HIGH if right < -0.5 else GPIO.LOW)
             pwm_ENB.ChangeDutyCycle(50 if abs(right) > 0.5 else 0)
             time.sleep(0.1)
 

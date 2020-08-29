@@ -55,11 +55,11 @@ async def offer(request):
 
             GPIO.output(IN1, GPIO.HIGH if left > 0.5 else GPIO.LOW)
             GPIO.output(IN2, GPIO.HIGH if left < -0.5 else GPIO.LOW)
-            pwm_ENA.ChangeDutyCycle(50 if abs(left) > 0.5 else 0)
+            pwm_ENA.ChangeDutyCycle(70 if abs(left) > 0.5 else 0)
 
             GPIO.output(IN3, GPIO.HIGH if right > 0.5 else GPIO.LOW)
             GPIO.output(IN4, GPIO.HIGH if right < -0.5 else GPIO.LOW)
-            pwm_ENB.ChangeDutyCycle(50 if abs(right) > 0.5 else 0)
+            pwm_ENB.ChangeDutyCycle(70 if abs(right) > 0.5 else 0)
             time.sleep(0.1)
 
             if isinstance(message, str) and message.startswith("ping"):

@@ -1,4 +1,4 @@
-const MESSAGE_RATE_MILLISECONDS = 100
+const MESSAGE_RATE_MILLISECONDS = 200
 
 var pc = null;
 

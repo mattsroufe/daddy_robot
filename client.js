@@ -1,3 +1,5 @@
+const MESSAGE_RATE_MILLISECONDS = 100
+
 var pc = null;
 
 // data channel
@@ -95,7 +97,7 @@ function start() {
             })
           }));
         }
-      }, 200);
+      }, MESSAGE_RATE_MILLISECONDS);
     };
     dc.onmessage = function(evt) {
       console.log(evt.data);

@@ -1,5 +1,17 @@
 # daddy_robot
 
+## Launch on boot
+
+`crontab -e`
+
+Add a new entry in the file:
+
+`@reboot python3 /home/pi/daddy_robot/server.py`
+
+Make sure the file is executable:
+
+`sudo chmod a+x /home/pi/daddy_robot/server.py`
+
 random commands i've used:
 
 ```

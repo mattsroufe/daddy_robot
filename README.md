@@ -18,7 +18,7 @@ Make sure the file is executable:
 
 add the following two lines:
 ```
-start_x=1
+start_x=1 # enable raspi camera
 gpu_mem=512
 ```
 https://www.raspberrypi.org/documentation/configuration/config-txt/memory.md

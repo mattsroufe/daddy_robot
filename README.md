@@ -12,6 +12,17 @@ Make sure the file is executable:
 
 `sudo chmod a+x /home/pi/daddy_robot/server.py`
 
+## raspiberry pi setup
+
+`sudo vim /boot/firmware/config.txt`
+
+add the following two lines:
+```
+start_x=1
+gpu_mem=512
+```
+https://www.raspberrypi.org/documentation/configuration/config-txt/memory.md
+
 random commands i've used:
 
 ```

@@ -1,5 +1,9 @@
 # daddy_robot
 
+## Demo video
+
+https://youtu.be/T0yaw4qGdxE
+
 ## Launch on boot
 
 `crontab -e`

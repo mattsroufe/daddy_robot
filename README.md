@@ -78,6 +78,14 @@ pip3 uninstall opencv-python
 pip3 install opencv-python==3.4.6.27
 ```
 
+## Development
+
+```
+cd frontend
+npx webpack --mode development
+python3 -m http.server
+```
+
 ## ROS Resources
 
 http://docs.donkeycar.com

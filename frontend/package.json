@@ -1,0 +1,14 @@
+{
+  "name": "daddy-robot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "nipplejs": "^0.8.7",
+    "roslib": "^1.1.0"
+  }
+}

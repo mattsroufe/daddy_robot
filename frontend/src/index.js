@@ -1,8 +1,15 @@
 import nipplejs from 'nipplejs';
 import ROSLIB from 'roslib';
 
+// Create a connection to the rosbridge WebSocket server.
+if (window.location.protocol == "https:") {
+  var ws_scheme = "wss://";
+} else {
+  var ws_scheme = "ws://"
+};
+
 var ros = new ROSLIB.Ros({
-  url : 'ws://localhost:9090'
+  url : ws_scheme + window.location.hostname + ':9090'
 });
 
 ros.on('connection', function() {

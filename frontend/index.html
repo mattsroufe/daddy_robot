@@ -2,17 +2,109 @@
 <html>
   <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-   <title>Getting Started</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daddy Robot</title>
+  <style>
+    body {
+        font-family: "Courier New", sans-serif;
+        text-align: center;
+    }
+    .buttons {
+        font-size: 4em;
+        display: flex;
+        justify-content: center;
+    }
+    .button, .value {
+        line-height: 1;
+        padding: 2rem;
+        margin: 2rem;
+        border: medium solid;
+        min-height: 1em;
+        min-width: 1em;
+    }
+    .button {
+        cursor: pointer;
+        user-select: none;
+    }
+    button {
+        padding: 8px 16px;
+    }
+    #media {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      height: 100vh;
+      width: 100vw
+    }
+    #video {
+      width: 100%;
+    }
+    #options {
+      position: fixed;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      color: #f1f1f1;
+      width: 100%;
+      padding: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Simple ROS User Interface</h1>
-  <p>Connection status: <span id="status"></span></p>
-  <p>Last /txt_msg received: <span id="msg"></span></p>
-  <div style="display: flex; justify-content: space-between">
-  <div style="width: 150px; height: 150px; position: relative" id="zone_joystick_1"></div>
-  <div style="width: 150px; height: 150px; position: relative" id="zone_joystick_2"></div>
+  <div id="media">
+    <audio id="audio" autoplay="true"></audio>
+    <video id="video" autoplay="true" playsinline="true"></video>
   </div>
+
+  <p>Connection status: <span id="status"></span></p>
+
+  <div style="display: flex; justify-content: space-between">
+    <div style="width: 150px; height: 150px; position: relative" id="zone_joystick_1"></div>
+    <div style="width: 150px; height: 150px; position: relative" id="zone_joystick_2"></div>
+  </div>
+  <!-- <img height="240" src="http://192.168.2.49:8080/stream/video.mjpeg" alt="image"> -->
+  <script>
+    var minus = document.querySelector('.minus'),
+        plus = document.querySelector('.plus'),
+        value = document.querySelector('.value'),
+        users = document.querySelector('.users');
+
+    const SERVO_UP_KEY = 87;
+    const SERVO_DOWN_KEY = 83;
+
+function startServoUp(e) {
+  if (e.keyCode === SERVO_UP_KEY) {
+    document.removeEventListener('keydown', startServoUp);
+    console.log(JSON.stringify({action: 'minus'}));
+    console.log('start servo up');
+  }
+}
+
+function stopServoUp(e) {
+  if (e.keyCode === SERVO_UP_KEY) {
+    document.addEventListener('keydown', startServoUp);
+    console.log('stop servo up')
+  }
+}
+
+function startServoDown(e) {
+  if (e.keyCode === SERVO_DOWN_KEY) {
+    document.removeEventListener('keydown', startServoDown);
+    console.log('start servo down');
+  }
+}
+
+function stopServoDown(e) {
+  if (e.keyCode === SERVO_DOWN_KEY) {
+    document.addEventListener('keydown', startServoDown);
+    console.log('stop servo down');
+  }
+}
+
+document.addEventListener('keyup', stopServoUp)
+document.addEventListener('keyup', stopServoDown)
+document.addEventListener('keydown', startServoUp)
+document.addEventListener('keydown', startServoDown)
+  </script>
   <script src="dist/main.js"></script>
 </body>
 </html>

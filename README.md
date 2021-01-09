@@ -6,10 +6,12 @@ https://youtu.be/T0yaw4qGdxE
 
 ## Run on raspberry pi
 
-`source /opt/ros/foxy/setup.bash`
-`cd daddy_robot`
-`. install/setup.bash`
-`ros2 run daddy_robot daddy_robot_node`
+```
+source /opt/ros/foxy/setup.bash
+cd daddy_robot
+. install/setup.bash
+ros2 run daddy_robot daddy_robot_node
+```
 
 ## Launch on boot
 
